@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stryde</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/logon.css">
+</head>
+<body>
+    <div class="d-flex align-items-center justify-content-center min-vh-100 p-4">
+        <div class="card w-100" style="max-width: 420px;">
+            <div class="card-body">
+                <h1 class="stryde-title">Stryde</h1>
+                
+                <div class="slider-container">
+                    <div class="slider-bg" id="sliderBg"></div>
+                    <button class="slider-btn active" id="loginBtn" onclick="switchToLogin()">Login</button>
+                    <button class="slider-btn inactive" id="signupBtn" onclick="switchToSignup()">Create Account</button>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="form-group">
+                    <div class="mb-3">
+                        <label for="loginUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="loginUsername" placeholder="Enter your username" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login">Log In</button>
+                </form>
+                
+                <!-- Signup Form -->
+                <form id="signupForm" class="form-group hidden">
+                    <div class="mb-3">
+                        <label for="signupUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="signupUsername" placeholder="Choose a username" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="signupPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="signupPassword" placeholder="Create a password" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/logon.js"></script>
+</body>
+</html>

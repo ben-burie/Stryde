@@ -1,0 +1,135 @@
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f0f4f8;
+    min-height: 100vh;
+}
+
+.stryde-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 3.5rem;
+    color: #0066cc;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
+    border-radius: 16px;
+}
+
+.slider-container {
+    position: relative;
+    display: flex;
+    background-color: #e8f0ff;
+    border-radius: 12px;
+    padding: 4px;
+    width: 100%;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.slider-bg {
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    height: calc(100% - 8px);
+    width: 50%;
+    transition: left 0.3s ease;
+    left: 4px;
+    top: 4px;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+}
+
+.slider-bg.active {
+    left: calc(50% + 4px);
+}
+
+.slider-btn {
+    flex: 1;
+    padding: 12px 24px;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+    border: none;
+    background: none;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.slider-btn.active {
+    color: #0066cc;
+}
+
+.slider-btn.inactive {
+    color: #999;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    border: 2px solid #e0e6f2;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background-color: #f9fbff;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    border-color: #0066cc;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    outline: none;
+}
+
+.btn-login {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+}
+
+.btn-login:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 102, 204, 0.3);
+    color: white;
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.form-group {
+    min-height: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+.card-body {
+    padding: 3rem;
+}

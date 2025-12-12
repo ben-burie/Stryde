@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stryde - AI-Powered Running Coach</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/home.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <div class="stryde-title">Stryde</div>
+            <div class="stryde-subtitle">AI-Powered Running Coach</div>
+        </div>
+        <div class="profile-icon" id="profileButton" aria-haspopup="true" aria-expanded="false" title="Account" aria-label="Account">
+                <!-- Inline SVG so we can control color (not a colorized emoji) -->
+                <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                </svg>
+                <div class="profile-menu hidden" id="profileMenu" role="menu" aria-hidden="true">
+                    <button class="profile-menu-item" id="uploadDataBtn" role="menuitem">Upload Your Data</button>
+                    <button class="profile-menu-item" id="accountSettingsBtn" role="menuitem">Account Settings</button>
+                    <button class="profile-menu-item" id="logoutBtn" role="menuitem">Logout</button>
+                </div>
+                <!-- Hidden input for upload action -->
+                <input type="file" id="uploadInput" style="display:none" aria-hidden="true">
+            </div>
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="stats-container">
+        <!-- VDOT Card -->
+        <div class="stat-card vdot-card">
+            <div class="circle-progress">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
+                    <!-- rotate just the progress circle so the text remains upright/centered -->
+                    <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                    <!-- Put the text inside the svg to keep perfect centering and not rotated -->
+                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle">66</text>
+                </svg>
+            </div>
+            <div class="stat-value">VDOT</div>
+        </div>
+        
+        <!-- Heart Rate Card -->
+        <div class="stat-card heart-card">
+            <div class="heart-icon">♥</div>
+            <div class="stat-value">103 BPM</div>
+            <div class="stat-label">AVG Heart Rate</div>
+        </div>
+        
+        <!-- Race Predictions Card -->
+        <div class="stat-card predictions-card">
+            <div class="predictions-title">Race Predictions</div>
+            <div class="prediction-item">
+                <span class="prediction-name">5K</span>
+                <span class="prediction-time">16:33</span>
+            </div>
+            <div class="prediction-item">
+                <span class="prediction-name">Half-Marathon</span>
+                <span class="prediction-time">1:18:35</span>
+            </div>
+            <div class="prediction-item">
+                <span class="prediction-name">Marathon</span>
+                <span class="prediction-time">2:37:15</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Section -->
+    <div class="chat-section">
+        <h2 class="chat-title">Chat With Coach</h2>
+        
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message coach">
+                    Great job on your last run! Keep up the consistent training.
+                </div>
+                <div class="message user">
+                    Thanks! What should I focus on for my next workout?
+                </div>
+                <div class="message coach">
+                    Based on your VDOT and heart rate, I recommend a tempo run at a slightly higher intensity. Aim for 8 miles at your tempo pace.
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <div class="input-group">
+                    <input type="text" id="messageInput" placeholder="Send a message to your coach..." onkeypress="handleKeyPress(event)">
+                    <button class="btn-send" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/home.js"></script>
+</body>
+</html>
