@@ -6,21 +6,7 @@ def build_rolling_features(input_csv_path: str, output_csv_path: str, windows=(1
     df = pd.read_csv(input_csv_path, parse_dates=["start_date"])
     df = df.sort_values("start_date").reset_index(drop=True)
 
-
-    if "distance_km" in df.columns:
-        df["distance_km"] = df["distance_km"].astype(float)
-        detected_unit = "kilometers (from distance_km)"
-    elif "distance" in df.columns:
-        df["distance"] = df["distance"].astype(float)
-        sample_max = df["distance"].abs().max() if not df.empty else 0
-        if sample_max > 1000:
-            df["distance_km"] = df["distance"] / 1000
-            detected_unit = "meters (converted to km)"
-        else:
-            df["distance_km"] = df["distance"].copy()
-            detected_unit = "kilometers (assumed from distance)"
-    else:
-        raise KeyError("Input CSV must include 'distance' or 'distance_km' column")
+    df["distance_km"] = df["distance_km"].astype(float)
 
     # Add a miles column for convenience (1 km = 0.621371 miles)
     df["distance_miles"] = df["distance_km"] * 0.621371
