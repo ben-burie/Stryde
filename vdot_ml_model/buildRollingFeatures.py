@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 
 # Change to pull from database instead of csv
-def build_rolling_features(input_csv_path: str, output_csv_path: str, windows=(14, 30)) -> None:
-    df = pd.read_csv(input_csv_path, parse_dates=["start_date"])
+def build_rolling_features(df: pd.DataFrame, windows=(14, 30)) -> pd.DataFrame:
+
+    df = df.copy()
     df = df.sort_values("start_date").reset_index(drop=True)
 
     df["distance_km"] = df["distance_km"].astype(float)
@@ -46,5 +47,5 @@ def build_rolling_features(input_csv_path: str, output_csv_path: str, windows=(1
     # Drop rows without sufficient history
     final_df = final_df.dropna().reset_index(drop=True)
 
-    final_df.to_csv(output_csv_path, index=False)
-    print(f"✅ Rolling features saved to: {output_csv_path}")
+    print("Rolling features built.")
+    return final_df

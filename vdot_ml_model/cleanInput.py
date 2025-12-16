@@ -1,6 +1,6 @@
 import pandas as pd
 
-def clean_strava_csv(input_csv_path: str, output_csv_path: str) -> None:
+def clean_strava_csv(input_csv_path: str) -> None:
     df = pd.read_csv(input_csv_path)
     df.columns = df.columns.str.strip()
 
@@ -22,7 +22,6 @@ def clean_strava_csv(input_csv_path: str, output_csv_path: str) -> None:
     }
 
     df = df[list(available_columns.keys())].rename(columns=available_columns)
-
     df = df[df["type"].str.lower() == "run"]
     df = df.dropna(subset=["average_heartrate", "max_heartrate"])
 
@@ -37,11 +36,10 @@ def clean_strava_csv(input_csv_path: str, output_csv_path: str) -> None:
 
     df["distance"] = df["distance"].astype(float)
     df["distance_km"] = df["distance"].copy()
-    detected_unit = "kilometers"
-
     df["distance_miles"] = df["distance_km"] * 0.621371
-    print(f"Detected distance unit: {detected_unit}. Converted to distance_km and distance_miles.")
 
-    df.to_csv(output_csv_path, index=False)
-    print(f"✅ Cleaned Strava CSV saved to: {output_csv_path}")
+    #df.to_csv(output_csv_path, index=False)
+    #print(f"✅ Cleaned Strava CSV saved to: {output_csv_path}")
     # Change to write to database instead of csv
+    print("Input cleaned.")
+    return df

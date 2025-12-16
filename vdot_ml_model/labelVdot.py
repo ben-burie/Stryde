@@ -24,10 +24,10 @@ def find_race_like_efforts(df: pd.DataFrame) -> pd.DataFrame:
         (df["stoppage_ratio"] >= 0.97) # Stopped no more than 3% of the time
     ]
 
-def label_rolling_features(runs_csv: str, rolling_csv: str, output_csv: str) -> None:
+def label_rolling_features(runs_df: pd.DataFrame, rolling_df: pd.DataFrame, output_csv: str) -> None:
 
-    runs = pd.read_csv(runs_csv, parse_dates=["start_date"])
-    rolling = pd.read_csv(rolling_csv, parse_dates=["start_date"])
+    runs = runs_df.copy()
+    rolling = rolling_df.copy()
 
     race_runs = find_race_like_efforts(runs)
 
@@ -77,4 +77,4 @@ def label_rolling_features(runs_csv: str, rolling_csv: str, output_csv: str) -> 
     labeled_df = pd.DataFrame(labeled_rows).reset_index(drop=True)
     labeled_df.to_csv(output_csv, index=False)
 
-    print(f"✅ Labeled ML dataset saved to: {output_csv}")
+    print("Final VDOT Data Saved. Graph displayed.")

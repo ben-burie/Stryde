@@ -5,20 +5,17 @@ from vdot_ml_model.labelVdot import label_rolling_features
 import pandas as pd
 import matplotlib.pyplot as plt
 
-clean_strava_csv(
-    input_csv_path="vdot_ml_model/activities_most_recent.csv",
-    output_csv_path="vdot_ml_model/strava_runs_clean.csv"
+clean_data = clean_strava_csv(
+    input_csv_path="vdot_ml_model/activities_most_recent.csv"
 )
 
-build_rolling_features(
-    input_csv_path="vdot_ml_model/strava_runs_clean.csv",
-    output_csv_path="vdot_ml_model/strava_rolling_features.csv",
-    windows=(14, 30)
+rolling_features_data = build_rolling_features(
+    df=clean_data
 )
 
 label_rolling_features(
-    runs_csv="vdot_ml_model/strava_runs_clean.csv",
-    rolling_csv="vdot_ml_model/strava_rolling_features.csv",
+    runs_df=clean_data,
+    rolling_df=rolling_features_data,
     output_csv="vdot_ml_model/vdot_ml_dataset.csv"
 )
 
