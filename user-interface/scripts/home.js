@@ -1,3 +1,6 @@
+const API_BASE_URL = 'http://127.0.0.1:5000/api';
+
+
 function sendMessage() {
     const input = document.getElementById('messageInput');
     const message = input.value.trim();
@@ -99,7 +102,9 @@ document.getElementById('uploadDataBtn').addEventListener('click', () => {
 uploadInput.addEventListener('change', (e) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
-        alert(`Selected file: ${file.name}`);
+        uploadData(file);
+    } else {
+        alert('No file selected');
     }
 });
 
@@ -112,3 +117,44 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     toggleProfileMenu(false);
     handleLogout();
 });
+
+// FLASK ENDPOINTS BELOW ------------------------------------
+function uploadData(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    fetch(`${API_BASE_URL}/upload-data`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(text => {
+        console.log('Raw response:', text);
+        const result = JSON.parse(text);
+        
+        if (result.error) {
+            alert('Error: ' + result.error);
+        } else {
+            alert(result.message);
+            document.getElementById('vdot-value').textContent = parseFloat(result.vdot).toFixed(2);
+            document.querySelector('.hr-value').textContent = Math.round(result.avg_hr) + ' BPM';
+        }
+    })
+    .catch(error => {
+        alert('Upload failed: ' + error.message);
+    });
+}
+
+function updateDashboard(vdot, avg_hr) {
+    // Update VDOT value
+    const vdotElement = document.getElementById('vdot-value');
+    if (vdotElement) {
+        vdotElement.textContent = vdot.toFixed(2);
+    }
+    
+    // Update HR value - find the element with class hr-value
+    const hrElement = document.querySelector('.hr-value');
+    if (hrElement) {
+        hrElement.textContent = avg_hr + ' BPM';
+    }
+}

@@ -40,33 +40,33 @@
                     <!-- rotate just the progress circle so the text remains upright/centered -->
                     <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
                     <!-- Put the text inside the svg to keep perfect centering and not rotated -->
-                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle">66</text>
+                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="vdot-value">--</text>
                 </svg>
             </div>
-            <div class="stat-value">Best VDOT</div>
+            <div class="stat-value">VDOT</div>
         </div>
         
         <!-- Heart Rate Card -->
         <div class="stat-card heart-card">
             <div class="heart-icon">♥</div>
-            <div class="stat-value">103 BPM</div>
+            <div class="hr-value" id="hr-value">-- BPM</div>
             <div class="stat-label">AVG Heart Rate</div>
         </div>
         
         <!-- Race Predictions Card -->
         <div class="stat-card predictions-card">
-            <div class="predictions-title">Peak Race Predictions</div>
+            <div class="predictions-title">Race Predictions</div>
             <div class="prediction-item">
                 <span class="prediction-name">5K</span>
-                <span class="prediction-time">16:33</span>
+                <span class="fivek-prediction-time">--:--:--</span>
             </div>
             <div class="prediction-item">
                 <span class="prediction-name">Half-Marathon</span>
-                <span class="prediction-time">1:18:35</span>
+                <span class="half-prediction-time">--:--:--</span>
             </div>
             <div class="prediction-item">
                 <span class="prediction-name">Marathon</span>
-                <span class="prediction-time">2:37:15</span>
+                <span class="full-prediction-time">--:--:--</span>
             </div>
         </div>
     </div>

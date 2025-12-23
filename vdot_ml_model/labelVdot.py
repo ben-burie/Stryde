@@ -78,3 +78,5 @@ def label_rolling_features(runs_df: pd.DataFrame, rolling_df: pd.DataFrame, outp
     labeled_df.to_csv(output_csv, index=False)
 
     print("Final VDOT Data Saved. Graph displayed.")
+
+    return labeled_df
