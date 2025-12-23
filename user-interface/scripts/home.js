@@ -135,26 +135,14 @@ function uploadData(file) {
         if (result.error) {
             alert('Error: ' + result.error);
         } else {
-            alert(result.message);
             document.getElementById('vdot-value').textContent = parseFloat(result.vdot).toFixed(2);
             document.querySelector('.hr-value').textContent = Math.round(result.avg_hr) + ' BPM';
+            document.querySelector('.fivek-prediction-time').textContent = result.fivek_time;
+            document.querySelector('.half-prediction-time').textContent = result.half_time;
+            document.querySelector('.full-prediction-time').textContent = result.full_time;
         }
     })
     .catch(error => {
         alert('Upload failed: ' + error.message);
     });
-}
-
-function updateDashboard(vdot, avg_hr) {
-    // Update VDOT value
-    const vdotElement = document.getElementById('vdot-value');
-    if (vdotElement) {
-        vdotElement.textContent = vdot.toFixed(2);
-    }
-    
-    // Update HR value - find the element with class hr-value
-    const hrElement = document.querySelector('.hr-value');
-    if (hrElement) {
-        hrElement.textContent = avg_hr + ' BPM';
-    }
 }

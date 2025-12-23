@@ -20,17 +20,14 @@ def clean_and_build_dataset(file_stream):
         rolling_features_data = build_rolling_features(df=clean_data)
         vdot_data = label_rolling_features(runs_df=clean_data, rolling_df=rolling_features_data, output_csv="vdot_ml_model/vdot_ml_dataset.csv")
 
-        # Check if vdot_data is empty
         if vdot_data.empty:
             print("Warning: No race-like efforts found in data")
             return 0.0, int(round(clean_data["average_heartrate"].mean()))
 
-        # Get most recent vdot
         latest_vdot = vdot_data.sort_values("start_date").iloc[-1]
         
-        # Convert numpy types to Python native types
-        vdot_value = float(latest_vdot['vdot'])  # numpy.float64 -> float
-        avg_hr = int(round(clean_data["average_heartrate"].mean()))  # numpy float -> int
+        vdot_value = float(latest_vdot['vdot']) 
+        avg_hr = int(round(clean_data["average_heartrate"].mean()))
         
         print(f"VDOT (type: {type(vdot_value).__name__}): {vdot_value}")
         print(f"Avg HR (type: {type(avg_hr).__name__}): {avg_hr}")
@@ -42,6 +39,7 @@ def clean_and_build_dataset(file_stream):
         import traceback
         print(traceback.format_exc())
         raise
+    
 
 
 
