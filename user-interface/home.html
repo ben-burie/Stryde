@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles/home.css">
 </head>
 <body>
+    <body>
     <!-- Header -->
     <div class="header">
         <div>
@@ -16,18 +17,16 @@
             <div class="stryde-subtitle">AI-Powered Running Coach</div>
         </div>
         <div class="profile-icon" id="profileButton" aria-haspopup="true" aria-expanded="false" title="Account" aria-label="Account">
-                <!-- Inline SVG so we can control color (not a colorized emoji) -->
-                <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
-                    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
-                </svg>
-                <div class="profile-menu hidden" id="profileMenu" role="menu" aria-hidden="true">
-                    <button class="profile-menu-item" id="uploadDataBtn" role="menuitem">Upload Your Data</button>
-                    <button class="profile-menu-item" id="accountSettingsBtn" role="menuitem">Account Settings</button>
-                    <button class="profile-menu-item" id="logoutBtn" role="menuitem">Logout</button>
-                </div>
-                <!-- Hidden input for upload action -->
-                <input type="file" id="uploadInput" style="display:none" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+            </svg>
+            <div class="profile-menu hidden" id="profileMenu" role="menu" aria-hidden="true">
+                <button class="profile-menu-item" id="uploadDataBtn" role="menuitem">Upload Your Data</button>
+                <button class="profile-menu-item" id="accountSettingsBtn" role="menuitem">Account Settings</button>
+                <button class="profile-menu-item" id="logoutBtn" role="menuitem">Logout</button>
             </div>
+            <input type="file" id="uploadInput" style="display:none" aria-hidden="true">
+        </div>
     </div>
     
     <!-- Stats Section -->
@@ -37,9 +36,7 @@
             <div class="circle-progress">
                 <svg width="120" height="120" viewBox="0 0 120 120">
                     <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
-                    <!-- rotate just the progress circle so the text remains upright/centered -->
                     <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-                    <!-- Put the text inside the svg to keep perfect centering and not rotated -->
                     <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="vdot-value">--</text>
                 </svg>
             </div>
@@ -92,6 +89,30 @@
                 <div class="input-group">
                     <input type="text" id="messageInput" placeholder="Send a message to your coach..." onkeypress="handleKeyPress(event)">
                     <button class="btn-send" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+        <div class="upload-modal-content">
+            <div class="upload-modal-header" id="uploadHeader">Upload Running Data</div>
+            
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-text">Click to upload or drag and drop</div>
+                <div class="upload-subtext">CSV file from Strava</div>
+            </div>
+
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <div class="loading-text">
+                    This may take a few moments
+                    <span class="loading-dots">
+                        <span>.</span><span>.</span><span>.</span>
+                    </span>
                 </div>
             </div>
         </div>

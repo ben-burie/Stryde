@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+from supabase import create_client, Client
 
 def clean_strava_csv(input_csv_path: str) -> None:
     df = pd.read_csv(input_csv_path)
@@ -35,11 +37,12 @@ def clean_strava_csv(input_csv_path: str) -> None:
     df = df.reset_index(drop=True)
 
     df["distance"] = df["distance"].astype(float)
+    df["start_date"] = df["start_date"].dt.strftime('%Y-%m-%d %H:%M:%S')
     df["distance_km"] = df["distance"].copy()
     df["distance_miles"] = df["distance_km"] * 0.621371
 
     df.to_csv("vdot_ml_model/clean_activities.csv", index=False)
     #print(f"✅ Cleaned Strava CSV saved to: {output_csv_path}")
-    # Change to write to database instead of csv
+
     print("Input cleaned.")
     return df

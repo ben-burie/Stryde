@@ -43,14 +43,13 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative; /* position the menu relative to this button */
+    position: relative;
 }
 
 .profile-icon:hover {
     background-color: #f0f4f8;
 }
 
-/* Inline svg inside profile icon should use the same Stryde blue */
 .profile-icon svg {
     width: 26px;
     height: 26px;
@@ -58,11 +57,10 @@ body {
     fill: #0066cc;
 }
 
-/* Profile dropdown menu */
 .profile-menu {
     position: absolute;
-    right: 0; /* align to right edge of profile icon */
-    top: calc(100% + 8px); /* sits below the profile button */
+    right: 0;
+    top: calc(100% + 8px);
     background: white;
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
@@ -72,7 +70,9 @@ body {
     z-index: 1000;
 }
 
-.profile-menu.hidden { display: none; }
+.profile-menu.hidden { 
+    display: none; 
+}
 
 .profile-menu-item {
     background: none;
@@ -127,14 +127,11 @@ body {
     margin-bottom: 1rem;
 }
 
-
 .circle-progress text {
     font-family: 'Poppins', sans-serif;
     font-size: 24px;
     font-weight: 700;
     fill: #0066cc;
-    text-anchor: middle;
-    dominant-baseline: middle;
 }
 
 .heart-card {
@@ -313,7 +310,170 @@ body {
     transform: translateY(0);
 }
 
-/* If we need to rotate the progress circle via CSS, rotate the .progress-ring itself */
-.circle-progress .progress-ring {
-    transform-origin: 60px 60px;
+/* Upload Modal Styles */
+.upload-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-modal.show {
+    display: flex;
+}
+
+.upload-modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.upload-modal-header {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.upload-area {
+    border: 2px dashed #0066cc;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f9fbff;
+    margin-bottom: 20px;
+}
+
+.upload-area:hover {
+    border-color: #0052a3;
+    background: #f0f4f8;
+}
+
+.upload-area.dragover {
+    border-color: #0052a3;
+    background: #e8f0ff;
+}
+
+.upload-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.upload-text {
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.upload-subtext {
+    color: #999;
+    font-size: 14px;
+}
+
+.loading-state {
+    display: none;
+    text-align: center;
+}
+
+.loading-state.show {
+    display: block;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 15px;
+    border: 4px solid #f0f4f8;
+    border-top: 4px solid #0066cc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.loading-dots {
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.loading-dots span {
+    animation: blink 1.4s infinite;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0%, 60%, 100% { opacity: 0.3; }
+    30% { opacity: 1; }
+}
+
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close-btn:hover {
+    color: #333;
+}
+
+.upload-modal-content {
+    position: relative;
+}
+
+#uploadInput {
+    display: none;
 }

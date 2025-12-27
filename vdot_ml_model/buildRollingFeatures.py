@@ -46,6 +46,8 @@ def build_rolling_features(df: pd.DataFrame, windows=(14, 30)) -> pd.DataFrame:
 
     # Drop rows without sufficient history
     final_df = final_df.dropna().reset_index(drop=True)
+    # send data to csv
+    #final_df.to_csv("vdot_ml_model/rolling_features.csv", index=False)
 
     print("Rolling features built.")
     return final_df
