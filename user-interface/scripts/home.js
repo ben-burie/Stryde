@@ -142,9 +142,23 @@ function sendMessage() {
         userMsg.textContent = message;
         chatMessages.appendChild(userMsg);
         input.value = '';
+        input.focus();
+
+        chatMessages.scrollTop = chatMessages.scrollHeight
+    }
+}
+
+function autoScrollChat() {
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
+
+// Call this when the page loads to ensure chat is scrolled to bottom
+document.addEventListener('DOMContentLoaded', () => {
+    autoScrollChat();
+});
 
 function generateTrainingPlan() {
     if (!DATA_UPLOADED) {
@@ -181,5 +195,7 @@ function switchTab(tabName) {
         buttons[1].classList.add('active');
         // Hide predicted fitness when switching to chat tab
         predictedFitnessSection.style.display = 'none';
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }

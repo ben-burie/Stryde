@@ -315,10 +315,27 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    display: block;
     gap: 1rem;
+    min-height: 0;
+    height: 450px;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f0f4f8;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #0066cc;
+    border-radius: 5px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #0052a3;
 }
 
 .message {
@@ -328,19 +345,22 @@ body {
     word-wrap: break-word;
     font-size: 0.95rem;
     line-height: 1.4;
+    margin-bottom: 1rem;
+    width: fit-content;
 }
 
 .message.coach {
     background-color: #e8f0ff;
     color: #0066cc;
-    align-self: flex-start;
     font-weight: 500;
+    margin-right: auto;
 }
 
 .message.user {
     background-color: #0066cc;
     color: white;
-    align-self: flex-end;
+    margin-left: auto;
+    margin-right: 0;
 }
 
 .chat-input-area {
