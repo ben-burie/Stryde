@@ -318,7 +318,7 @@ body {
     display: block;
     gap: 1rem;
     min-height: 0;
-    height: 450px;
+    height: 500px;
 }
 
 .chat-messages::-webkit-scrollbar {

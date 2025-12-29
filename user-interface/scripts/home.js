@@ -1,5 +1,41 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5000';
 
+// Prevent back button
+window.history.pushState(null, null, window.location.href);
+window.onpopstate = function() {
+    window.history.pushState(null, null, window.location.href);
+};
+
+// On page load, verify user is authenticated
+window.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+        window.location.href = '/';
+        return;
+    }
+    
+    // Verify token is valid
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/verify-token`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            localStorage.removeItem('authToken');
+            window.location.replace('/');
+        }
+    } catch (error) {
+        console.error('Token verification failed:', error);
+        localStorage.removeItem('authToken');
+        window.location.replace('/');
+    }
+});
+
+// Get DOM elements
 const profileButton = document.getElementById('profileButton');
 const profileMenu = document.getElementById('profileMenu');
 const uploadDataBtn = document.getElementById('uploadDataBtn');
@@ -10,23 +46,22 @@ const uploadInput = document.getElementById('uploadInput');
 const loadingState = document.getElementById('loadingState');
 const errorMessage = document.getElementById('errorMessage');
 
-var DATA_UPLOADED = false;
+let DATA_UPLOADED = false;
 
+// Profile menu toggle
 profileButton.addEventListener('click', () => {
-    const isHidden = profileMenu.classList.toggle('hidden');
-    profileMenu.setAttribute('aria-hidden', isHidden ? 'true' : 'false');
+    profileMenu.classList.toggle('hidden');
 });
 
 document.addEventListener('click', (e) => {
     if (!profileButton.contains(e.target) && !profileMenu.contains(e.target)) {
         profileMenu.classList.add('hidden');
-        profileMenu.setAttribute('aria-hidden', 'true');
     }
 });
 
+// Upload data button
 uploadDataBtn.addEventListener('click', () => {
     profileMenu.classList.add('hidden');
-    profileMenu.setAttribute('aria-hidden', 'true');
     openUploadModal();
 });
 
@@ -47,6 +82,7 @@ function resetUploadModal() {
     uploadArea.style.display = 'block';
 }
 
+// Upload area interactions
 uploadArea.addEventListener('click', () => uploadInput.click());
 
 uploadInput.addEventListener('change', (e) => {
@@ -81,14 +117,19 @@ function uploadData(file) {
     const formData = new FormData();
     formData.append('file', file);
 
+    const token = localStorage.getItem('authToken');
+
     loadingState.classList.add('show');
     uploadArea.style.display = 'none';
     uploadHeader.textContent = 'Processing Your Data';
     errorMessage.classList.remove('show');
     document.getElementById('closeModalBtn').classList.add('hidden');
 
-    fetch(`${API_BASE_URL}/upload-data`, {
+    fetch(`${API_BASE_URL}/api/upload-data`, {
         method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
         body: formData
     })
     .then(response => response.json())
@@ -126,6 +167,7 @@ function showError(message) {
     loadingState.classList.remove('show');
 }
 
+// Chat functionality
 function handleKeyPress(event) {
     if (event.key === 'Enter') {
         sendMessage();
@@ -143,23 +185,11 @@ function sendMessage() {
         chatMessages.appendChild(userMsg);
         input.value = '';
         input.focus();
-
-        chatMessages.scrollTop = chatMessages.scrollHeight
-    }
-}
-
-function autoScrollChat() {
-    const chatMessages = document.getElementById('chatMessages');
-    if (chatMessages) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
 
-// Call this when the page loads to ensure chat is scrolled to bottom
-document.addEventListener('DOMContentLoaded', () => {
-    autoScrollChat();
-});
-
+// Training plan
 function generateTrainingPlan() {
     if (!DATA_UPLOADED) {
         alert('Please upload your data first to generate a training plan.');
@@ -174,6 +204,7 @@ function generateTrainingPlan() {
     generatePlanBtn.style.display = 'none';
 }
 
+// Tab switching
 function switchTab(tabName) {
     const trainingTab = document.getElementById('training-tab');
     const chatTab = document.getElementById('chat-tab');
@@ -187,15 +218,25 @@ function switchTab(tabName) {
         chatTab.classList.remove('active');
         buttons[0].classList.add('active');
         if (document.getElementById('generatePlanBtn').style.display === 'none') {
-                    predictedFitnessSection.style.display = 'block';
+            predictedFitnessSection.style.display = 'block';
         }
     } else if (tabName === 'chat') {
         chatTab.classList.add('active');
         trainingTab.classList.remove('active');
         buttons[1].classList.add('active');
-        // Hide predicted fitness when switching to chat tab
         predictedFitnessSection.style.display = 'none';
-        const chatMessages = document.getElementById('chatMessages');
-        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
+
+function logout() {
+    localStorage.removeItem('authToken');
+
+    window.location.replace('/');
+
+    window.history.pushState(null, null, '/');
+    window.onpopstate = function() {
+        window.history.pushState(null, null, '/');
+    };
+}
+
+document.getElementById('logoutBtn').addEventListener('click', logout);

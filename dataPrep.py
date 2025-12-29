@@ -128,6 +128,6 @@ def write_recent_activity_to_db(df: pd.DataFrame):
         try:
             supabase.table("RecentActivity").insert(data_to_insert).execute()
             count += 1
-            print(f"✅ Recent activity successfully written to the database. Count: {count}")
+            print(f"Recent activity successfully written to the database. Count: {count}")
         except Exception as e:
-            print(f"❌ Failed to write recent activity to the database. Error: {e}")
+            print(f"Failed to write recent activity to the database. Error: {e}")
