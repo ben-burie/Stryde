@@ -90,14 +90,24 @@ body {
 }
 
 .stats-container {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+}
+
+.stats-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.stats-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
-    padding: 0 2rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .stat-card {
@@ -199,10 +209,77 @@ body {
     color: #333;
 }
 
-.fivek-prediction-time, .half-prediction-time, .full-prediction-time {
+.fivek-prediction-time, .half-prediction-time, .full-prediction-time,
+.predicted-fivek-prediction-time, .predicted-half-prediction-time, .predicted-full-prediction-time {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
     color: #0066cc;
+}
+
+.training-plan-section {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+}
+
+.training-plan-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.btn-generate-plan {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 32px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    display: block;
+    margin: 0 auto 1.5rem;
+}
+
+.btn-generate-plan:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+.btn-generate-plan:active {
+    transform: translateY(0);
+}
+
+.training-plan-box {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
+    border-left: 5px solid #0066cc;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.training-plan-box.hidden {
+    display: none;
+}
+
+.predicted-fitness-section.hidden {
+    display: none;
+}
+
+.training-plan-text {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .chat-section {
@@ -310,7 +387,6 @@ body {
     transform: translateY(0);
 }
 
-/* Upload Modal Styles */
 .upload-modal {
     display: none;
     position: fixed;
@@ -335,6 +411,7 @@ body {
     max-width: 500px;
     width: 90%;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
 .upload-modal-header {
@@ -365,11 +442,6 @@ body {
 .upload-area.dragover {
     border-color: #0052a3;
     background: #e8f0ff;
-}
-
-.upload-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
 }
 
 .upload-text {
@@ -447,31 +519,6 @@ body {
 
 .error-message.show {
     display: block;
-}
-
-.modal-close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 28px;
-    color: #666;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-close-btn:hover {
-    color: #333;
-}
-
-.upload-modal-content {
-    position: relative;
 }
 
 #uploadInput {

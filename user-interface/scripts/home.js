@@ -136,3 +136,13 @@ function sendMessage() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
+
+function generateTrainingPlan() {
+    const trainingPlanBox = document.getElementById('trainingPlanBox');
+    const generatePlanBtn = document.getElementById('generatePlanBtn');
+    const predictedFitnessSection = document.getElementById('predictedFitnessSection');
+    
+    trainingPlanBox.classList.remove('hidden');
+    predictedFitnessSection.style.display = 'block';
+    generatePlanBtn.style.display = 'none';
+}

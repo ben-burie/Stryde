@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="styles/home.css">
 </head>
 <body>
-    <body>
     <!-- Header -->
     <div class="header">
         <div>
@@ -29,41 +28,131 @@
         </div>
     </div>
     
-    <!-- Stats Section -->
+    <!-- Current Fitness Stats Section -->
     <div class="stats-container">
-        <!-- VDOT Card -->
-        <div class="stat-card vdot-card">
-            <div class="circle-progress">
-                <svg width="120" height="120" viewBox="0 0 120 120">
-                    <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
-                    <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="vdot-value">--</text>
-                </svg>
+        <h2 class="stats-title">Current Fitness</h2>
+        <div class="stats-cards-grid">
+            <!-- VDOT Card -->
+            <div class="stat-card vdot-card">
+                <div class="circle-progress">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
+                        <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                        <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="vdot-value">--</text>
+                    </svg>
+                </div>
+                <div class="stat-value">VDOT</div>
             </div>
-            <div class="stat-value">VDOT</div>
+            
+            <!-- Heart Rate Card -->
+            <div class="stat-card heart-card">
+                <div class="heart-icon">♥</div>
+                <div class="hr-value" id="hr-value">-- BPM</div>
+                <div class="stat-label">AVG Heart Rate</div>
+            </div>
+            
+            <!-- Race Predictions Card -->
+            <div class="stat-card predictions-card">
+                <div class="predictions-title">Race Predictions</div>
+                <div class="prediction-item">
+                    <span class="prediction-name">5K</span>
+                    <span class="fivek-prediction-time">--:--:--</span>
+                </div>
+                <div class="prediction-item">
+                    <span class="prediction-name">Half-Marathon</span>
+                    <span class="half-prediction-time">--:--:--</span>
+                </div>
+                <div class="prediction-item">
+                    <span class="prediction-name">Marathon</span>
+                    <span class="full-prediction-time">--:--:--</span>
+                </div>
+            </div>
         </div>
-        
-        <!-- Heart Rate Card -->
-        <div class="stat-card heart-card">
-            <div class="heart-icon">♥</div>
-            <div class="hr-value" id="hr-value">-- BPM</div>
-            <div class="stat-label">AVG Heart Rate</div>
+    </div>
+
+    <!-- 30-Day Training Plan Section -->
+    <div class="training-plan-section">
+        <h2 class="training-plan-title">Your 30-Day Training Plan</h2>
+        <button class="btn-generate-plan" id="generatePlanBtn" onclick="generateTrainingPlan()">Use AI to Generate Plan</button>
+        <div class="training-plan-box hidden" id="trainingPlanBox">
+            <div class="training-plan-text" id="trainingPlanText">Week 1: Building Aerobic Base
+Day 1: Easy Run - 4 miles at conversational pace
+Day 2: Rest or cross-training
+Day 3: Tempo Run - 2 mile warmup, 3 miles at tempo pace, 1 mile cooldown
+Day 4: Recovery Run - 3 miles easy
+Day 5: Interval Workout - 10x800m at 5K pace with 90s recovery
+Day 6: Long Run - 8 miles easy pace
+Day 7: Rest
+
+Week 2: Increasing Volume
+Day 8: Easy Run - 4 miles at conversational pace
+Day 9: Rest or cross-training
+Day 10: Fartlek Run - 20 mins warmup, 8x3 min hard/2 min easy, 10 mins cooldown
+Day 11: Recovery Run - 3 miles easy
+Day 12: Threshold Run - 2 mile warmup, 4 miles at tempo pace, 1 mile cooldown
+Day 13: Long Run - 9 miles easy pace
+Day 14: Rest
+
+Week 3: Building Strength
+Day 15: Easy Run - 5 miles at conversational pace
+Day 16: Rest or cross-training
+Day 17: Speed Work - 12x600m at mile pace with 60s recovery
+Day 18: Recovery Run - 4 miles easy
+Day 19: Tempo Run - 2 mile warmup, 4 miles at tempo pace, 1 mile cooldown
+Day 20: Long Run - 10 miles easy pace
+Day 21: Rest
+
+Week 4: Peak Week & Recovery
+Day 22: Easy Run - 5 miles at conversational pace
+Day 23: Rest or cross-training
+Day 24: Tempo Run - 2 mile warmup, 3 miles at tempo pace, 1 mile cooldown
+Day 25: Recovery Run - 3 miles easy
+Day 26: Short intervals - 8x1000m at 5K pace with 90s recovery
+Day 27: Moderate Long Run - 8 miles easy pace (recovery week)
+Day 28-30: Rest and light recovery runs
+
+Notes: Listen to your body. If you feel fatigued, take an extra rest day. Cross-training can include cycling, swimming, or strength training. Maintain hydration and proper nutrition throughout the plan.</div>
         </div>
-        
-        <!-- Race Predictions Card -->
-        <div class="stat-card predictions-card">
-            <div class="predictions-title">Race Predictions</div>
-            <div class="prediction-item">
-                <span class="prediction-name">5K</span>
-                <span class="fivek-prediction-time">--:--:--</span>
+    </div>
+
+    <!-- Predicted Fitness Stats Section -->
+    <div class="stats-container" id="predictedFitnessSection" style="display: none;">
+        <h2 class="stats-title">Predicted Fitness After Plan</h2>
+        <div class="stats-cards-grid">
+            <!-- Predicted VDOT Card -->
+            <div class="stat-card vdot-card">
+                <div class="circle-progress">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
+                        <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                        <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="predicted-vdot-value">--</text>
+                    </svg>
+                </div>
+                <div class="stat-value">VDOT</div>
             </div>
-            <div class="prediction-item">
-                <span class="prediction-name">Half-Marathon</span>
-                <span class="half-prediction-time">--:--:--</span>
+            
+            <!-- Predicted Heart Rate Card -->
+            <div class="stat-card heart-card">
+                <div class="heart-icon">♥</div>
+                <div class="hr-value" id="predicted-hr-value">-- BPM</div>
+                <div class="stat-label">AVG Heart Rate</div>
             </div>
-            <div class="prediction-item">
-                <span class="prediction-name">Marathon</span>
-                <span class="full-prediction-time">--:--:--</span>
+            
+            <!-- Predicted Race Predictions Card -->
+            <div class="stat-card predictions-card">
+                <div class="predictions-title">Race Predictions</div>
+                <div class="prediction-item">
+                    <span class="prediction-name">5K</span>
+                    <span class="predicted-fivek-prediction-time">--:--:--</span>
+                </div>
+                <div class="prediction-item">
+                    <span class="prediction-name">Half-Marathon</span>
+                    <span class="predicted-half-prediction-time">--:--:--</span>
+                </div>
+                <div class="prediction-item">
+                    <span class="prediction-name">Marathon</span>
+                    <span class="predicted-full-prediction-time">--:--:--</span>
+                </div>
             </div>
         </div>
     </div>
