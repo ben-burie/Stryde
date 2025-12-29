@@ -28,50 +28,57 @@
         </div>
     </div>
     
-    <!-- Current Fitness Stats Section -->
-    <div class="stats-container">
-        <h2 class="stats-title">Current Fitness</h2>
-        <div class="stats-cards-grid">
-            <!-- VDOT Card -->
-            <div class="stat-card vdot-card">
-                <div class="circle-progress">
-                    <svg width="120" height="120" viewBox="0 0 120 120">
-                        <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
-                        <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-                        <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="vdot-value">--</text>
-                    </svg>
+    <!-- Tabs Container -->
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('training')">Training Plan</button>
+            <button class="tab-button" onclick="switchTab('chat')">Chat With Coach</button>
+        </div>
+    </div>
+    
+    <!-- Training Tab -->
+    <div id="training-tab" class="tab-content active">
+        <div class="stats-container">
+            <h2 class="stats-title">Current Fitness</h2>
+            <div class="stats-cards-grid">
+                <!-- VDOT Card -->
+                <div class="stat-card vdot-card">
+                    <div class="circle-progress">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
+                            <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                            <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="vdot-value">--</text>
+                        </svg>
+                    </div>
+                    <div class="stat-value">VDOT</div>
                 </div>
-                <div class="stat-value">VDOT</div>
-            </div>
-            
-            <!-- Heart Rate Card -->
-            <div class="stat-card heart-card">
-                <div class="heart-icon">♥</div>
-                <div class="hr-value" id="hr-value">-- BPM</div>
-                <div class="stat-label">AVG Heart Rate</div>
-            </div>
-            
-            <!-- Race Predictions Card -->
-            <div class="stat-card predictions-card">
-                <div class="predictions-title">Race Predictions</div>
-                <div class="prediction-item">
-                    <span class="prediction-name">5K</span>
-                    <span class="fivek-prediction-time">--:--:--</span>
+                
+                <!-- Heart Rate Card -->
+                <div class="stat-card heart-card">
+                    <div class="heart-icon">♥</div>
+                    <div class="hr-value" id="hr-value">-- BPM</div>
+                    <div class="stat-label">AVG Heart Rate</div>
                 </div>
-                <div class="prediction-item">
-                    <span class="prediction-name">Half-Marathon</span>
-                    <span class="half-prediction-time">--:--:--</span>
-                </div>
-                <div class="prediction-item">
-                    <span class="prediction-name">Marathon</span>
-                    <span class="full-prediction-time">--:--:--</span>
+                
+                <!-- Race Predictions Card -->
+                <div class="stat-card predictions-card">
+                    <div class="predictions-title">Race Predictions</div>
+                    <div class="prediction-item">
+                        <span class="prediction-name">5K</span>
+                        <span class="fivek-prediction-time">--:--:--</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-name">Half-Marathon</span>
+                        <span class="half-prediction-time">--:--:--</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-name">Marathon</span>
+                        <span class="full-prediction-time">--:--:--</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- 30-Day Training Plan Section -->
-    <div class="training-plan-section">
         <h2 class="training-plan-title">Your 30-Day Training Plan</h2>
         <button class="btn-generate-plan" id="generatePlanBtn" onclick="generateTrainingPlan()">Use AI to Generate Plan</button>
         <div class="training-plan-box hidden" id="trainingPlanBox">
@@ -113,71 +120,73 @@ Day 28-30: Rest and light recovery runs
 
 Notes: Listen to your body. If you feel fatigued, take an extra rest day. Cross-training can include cycling, swimming, or strength training. Maintain hydration and proper nutrition throughout the plan.</div>
         </div>
-    </div>
 
-    <!-- Predicted Fitness Stats Section -->
-    <div class="stats-container" id="predictedFitnessSection" style="display: none;">
-        <h2 class="stats-title">Predicted Fitness After Plan</h2>
-        <div class="stats-cards-grid">
-            <!-- Predicted VDOT Card -->
-            <div class="stat-card vdot-card">
-                <div class="circle-progress">
-                    <svg width="120" height="120" viewBox="0 0 120 120">
-                        <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
-                        <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-                        <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="predicted-vdot-value">--</text>
-                    </svg>
+        <!-- Predicted Fitness Stats Section -->
+        <div class="stats-container" id="predictedFitnessSection" style="display: none;">
+            <h2 class="stats-title">Predicted Fitness After Plan</h2>
+            <div class="stats-cards-grid">
+                <!-- Predicted VDOT Card -->
+                <div class="stat-card vdot-card">
+                    <div class="circle-progress">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e6f2" stroke-width="8"/>
+                            <circle class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#0066cc" stroke-width="8" stroke-dasharray="254" stroke-dashoffset="63.5" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                            <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" id="predicted-vdot-value">--</text>
+                        </svg>
+                    </div>
+                    <div class="stat-value">VDOT</div>
                 </div>
-                <div class="stat-value">VDOT</div>
-            </div>
-            
-            <!-- Predicted Heart Rate Card -->
-            <div class="stat-card heart-card">
-                <div class="heart-icon">♥</div>
-                <div class="hr-value" id="predicted-hr-value">-- BPM</div>
-                <div class="stat-label">AVG Heart Rate</div>
-            </div>
-            
-            <!-- Predicted Race Predictions Card -->
-            <div class="stat-card predictions-card">
-                <div class="predictions-title">Race Predictions</div>
-                <div class="prediction-item">
-                    <span class="prediction-name">5K</span>
-                    <span class="predicted-fivek-prediction-time">--:--:--</span>
+                
+                <!-- Predicted Heart Rate Card -->
+                <div class="stat-card heart-card">
+                    <div class="heart-icon">♥</div>
+                    <div class="hr-value" id="predicted-hr-value">-- BPM</div>
+                    <div class="stat-label">AVG Heart Rate</div>
                 </div>
-                <div class="prediction-item">
-                    <span class="prediction-name">Half-Marathon</span>
-                    <span class="predicted-half-prediction-time">--:--:--</span>
-                </div>
-                <div class="prediction-item">
-                    <span class="prediction-name">Marathon</span>
-                    <span class="predicted-full-prediction-time">--:--:--</span>
+                
+                <!-- Predicted Race Predictions Card -->
+                <div class="stat-card predictions-card">
+                    <div class="predictions-title">Race Predictions</div>
+                    <div class="prediction-item">
+                        <span class="prediction-name">5K</span>
+                        <span class="predicted-fivek-prediction-time">--:--:--</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-name">Half-Marathon</span>
+                        <span class="predicted-half-prediction-time">--:--:--</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-name">Marathon</span>
+                        <span class="predicted-full-prediction-time">--:--:--</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Chat Section -->
-    <div class="chat-section">
-        <h2 class="chat-title">Chat With Coach</h2>
-        
-        <div class="chat-container">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message coach">
-                    Great job on your last run! Keep up the consistent training.
-                </div>
-                <div class="message user">
-                    Thanks! What should I focus on for my next workout?
-                </div>
-                <div class="message coach">
-                    Based on your VDOT and heart rate, I recommend a tempo run at a slightly higher intensity. Aim for 8 miles at your tempo pace.
-                </div>
-            </div>
+    <!-- Chat Tab -->
+    <div id="chat-tab" class="tab-content">
+        <div class="chat-section">
+            <h2 class="chat-title">Chat With Coach</h2>
             
-            <div class="chat-input-area">
-                <div class="input-group">
-                    <input type="text" id="messageInput" placeholder="Send a message to your coach..." onkeypress="handleKeyPress(event)">
-                    <button class="btn-send" onclick="sendMessage()">Send</button>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message coach">
+                        Great job on your last run! Keep up the consistent training.
+                    </div>
+                    <div class="message user">
+                        Thanks! What should I focus on for my next workout?
+                    </div>
+                    <div class="message coach">
+                        Based on your VDOT and heart rate, I recommend a tempo run at a slightly higher intensity. Aim for 8 miles at your tempo pace.
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <div class="input-group">
+                        <input type="text" id="messageInput" placeholder="Send a message to your coach..." onkeypress="handleKeyPress(event)">
+                        <button class="btn-send" onclick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,6 +195,7 @@ Notes: Listen to your body. If you feel fatigued, take an extra rest day. Cross-
     <!-- Upload Modal -->
     <div class="upload-modal" id="uploadModal">
         <div class="upload-modal-content">
+            <button class="modal-close-btn" id="closeModalBtn" onclick="closeUploadModal()" aria-label="Close modal">&times;</button>
             <div class="upload-modal-header" id="uploadHeader">Upload Running Data</div>
             
             <div class="error-message" id="errorMessage"></div>
@@ -206,6 +216,7 @@ Notes: Listen to your body. If you feel fatigued, take an extra rest day. Cross-
             </div>
         </div>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="scripts/home.js"></script>
 </body>

@@ -10,18 +10,23 @@ const uploadInput = document.getElementById('uploadInput');
 const loadingState = document.getElementById('loadingState');
 const errorMessage = document.getElementById('errorMessage');
 
+var DATA_UPLOADED = false;
+
 profileButton.addEventListener('click', () => {
-    profileMenu.classList.toggle('hidden');
+    const isHidden = profileMenu.classList.toggle('hidden');
+    profileMenu.setAttribute('aria-hidden', isHidden ? 'true' : 'false');
 });
 
 document.addEventListener('click', (e) => {
     if (!profileButton.contains(e.target) && !profileMenu.contains(e.target)) {
         profileMenu.classList.add('hidden');
+        profileMenu.setAttribute('aria-hidden', 'true');
     }
 });
 
 uploadDataBtn.addEventListener('click', () => {
     profileMenu.classList.add('hidden');
+    profileMenu.setAttribute('aria-hidden', 'true');
     openUploadModal();
 });
 
@@ -80,6 +85,7 @@ function uploadData(file) {
     uploadArea.style.display = 'none';
     uploadHeader.textContent = 'Processing Your Data';
     errorMessage.classList.remove('show');
+    document.getElementById('closeModalBtn').classList.add('hidden');
 
     fetch(`${API_BASE_URL}/upload-data`, {
         method: 'POST',
@@ -89,13 +95,16 @@ function uploadData(file) {
     .then(result => {
         if (result.error) {
             showError('Error: ' + result.error);
+            document.getElementById('closeModalBtn').classList.remove('hidden');
         } else {
             displayResults(result);
             closeUploadModal();
+            DATA_UPLOADED = true;
         }
     })
     .catch(error => {
         showError('Upload failed: ' + error.message);
+        document.getElementById('closeModalBtn').classList.remove('hidden');
     })
     .finally(() => {
         loadingState.classList.remove('show');
@@ -138,6 +147,10 @@ function sendMessage() {
 }
 
 function generateTrainingPlan() {
+    if (!DATA_UPLOADED) {
+        alert('Please upload your data first to generate a training plan.');
+        return;
+    }
     const trainingPlanBox = document.getElementById('trainingPlanBox');
     const generatePlanBtn = document.getElementById('generatePlanBtn');
     const predictedFitnessSection = document.getElementById('predictedFitnessSection');
@@ -145,4 +158,28 @@ function generateTrainingPlan() {
     trainingPlanBox.classList.remove('hidden');
     predictedFitnessSection.style.display = 'block';
     generatePlanBtn.style.display = 'none';
+}
+
+function switchTab(tabName) {
+    const trainingTab = document.getElementById('training-tab');
+    const chatTab = document.getElementById('chat-tab');
+    const predictedFitnessSection = document.getElementById('predictedFitnessSection');
+    const buttons = document.querySelectorAll('.tab-button');
+    
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (tabName === 'training') {
+        trainingTab.classList.add('active');
+        chatTab.classList.remove('active');
+        buttons[0].classList.add('active');
+        if (document.getElementById('generatePlanBtn').style.display === 'none') {
+                    predictedFitnessSection.style.display = 'block';
+        }
+    } else if (tabName === 'chat') {
+        chatTab.classList.add('active');
+        trainingTab.classList.remove('active');
+        buttons[1].classList.add('active');
+        // Hide predicted fitness when switching to chat tab
+        predictedFitnessSection.style.display = 'none';
+    }
 }
