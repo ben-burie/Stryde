@@ -28,6 +28,28 @@ window.addEventListener('DOMContentLoaded', async () => {
             localStorage.removeItem('authToken');
             window.location.replace('/');
         }
+
+        // Fetch user data
+        const dataResponse = await fetch(`${API_BASE_URL}/api/get-user-data`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (dataResponse.ok) {
+            const userData = await dataResponse.json();
+            DATA_UPLOADED = true;
+
+            document.getElementById('vdot-value').textContent = parseFloat(userData.vdot).toFixed(2);
+            document.getElementById('hr-value').textContent = Math.round(userData.avg_hr) + ' BPM';
+            document.querySelector('.fivek-prediction-time').textContent = userData.fivek_time;
+            document.querySelector('.half-prediction-time').textContent = userData.half_time;
+            document.querySelector('.full-prediction-time').textContent = userData.full_time;
+        } else {
+            console.error('Failed to fetch user data');
+        }
+
     } catch (error) {
         console.error('Token verification failed:', error);
         localStorage.removeItem('authToken');

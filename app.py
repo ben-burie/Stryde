@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 # Helper scripts
-from dataPrep import clean_and_build_dataset
+from dataPrep import clean_and_build_dataset, check_for_data, write_current_fitness_metrics_to_db
 from getPredictions import get_times, seconds_to_time
 import loginHandler
 
@@ -38,7 +38,9 @@ def login():
         if not result:
             return jsonify({'message': 'Invalid credentials'}), 401
 
-        print(f"✓ Login successful for {email}")
+        print(f"Login successful for {email}")
+
+        dataResult = check_for_data(result.user.id)
 
         return jsonify({
             'status': 'success',
@@ -103,13 +105,19 @@ def upload_data():
         
         if not file.filename.endswith('.csv'):
             return '{"error":"Not CSV"}', 400
+
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        user = loginHandler.verify_token(token)
+        userId = user.id
+        print(f"User ID from token: {userId}")
         
-        result = clean_and_build_dataset(file_stream=file)
+        result = clean_and_build_dataset(file_stream=file, user=userId)
         vdot = result[0]
         avg_hr = result[1]
 
         times = get_times(vdot)
-        print(times)
+
+        write_current_fitness_metrics_to_db(vdot, avg_hr, times['5000'], times['1/2 Marathon'], times['Marathon'], userId)
 
         return {
             'vdot': vdot,
@@ -122,6 +130,48 @@ def upload_data():
     except Exception as e:
         print(f"ERROR: {str(e)}")
         return '{"error":"error"}', 500
+    
+@app.route('/api/get-user-data', methods=['GET'])
+def get_user_data():
+    try:
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+
+        print(token)
+
+        if not token:
+            return jsonify({'message': 'No token provided'}), 401
+
+        user = loginHandler.verify_token(token)
+
+        if not user:
+            return jsonify({'message': 'Invalid token'}), 401
+
+        dataResult = check_for_data(user.id)
+
+        if dataResult is False:
+            return jsonify({'message': 'No data found for user'}), 404
+
+        vdot = dataResult['vdot']
+        avg_hr = dataResult['avg_hr']
+        fivek_time = seconds_to_time(dataResult['fivek_prediction'])
+        half_time = seconds_to_time(dataResult['half_prediction'])
+        full_time = seconds_to_time(dataResult['full_prediction'])
+
+        if not dataResult:
+            return jsonify({'message': 'No data found for user'}), 404
+
+        return jsonify({
+            'status': 'success',
+            'vdot': vdot,
+            'avg_hr': avg_hr,
+            'fivek_time': fivek_time,
+            'half_time': half_time,
+            'full_time': full_time
+        }), 200
+
+    except Exception as e:
+        print(f"Error retrieving user data: {str(e)}")
+        return jsonify({'message': str(e)}), 500
 
 @app.route('/api/health', methods=['GET'])
 def health():

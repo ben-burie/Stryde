@@ -13,13 +13,13 @@ from io import StringIO
 from supabase import create_client, Client
 import os
 
-def clean_and_build_dataset(file_stream):
+def clean_and_build_dataset(file_stream, user):
     try: 
         csv_string = file_stream.read().decode('utf-8')
         csv_io = StringIO(csv_string)
 
         clean_data = clean_strava_csv(input_csv_path=csv_io)
-        write_rundata_to_db(clean_data)
+        write_rundata_to_db(clean_data, user)
         clean_data["start_date"] = pd.to_datetime(clean_data["start_date"])
 
         rolling_features_data = build_rolling_features(df=clean_data)
@@ -29,7 +29,7 @@ def clean_and_build_dataset(file_stream):
 
         last_30_days_for_db = last_30_days.copy()
         last_30_days_for_db["start_date"] = pd.Timestamp(last_30_days_for_db["start_date"]).strftime('%Y-%m-%d %H:%M:%S')
-        write_recent_activity_to_db(pd.DataFrame([last_30_days_for_db]))
+        write_recent_activity_to_db(pd.DataFrame([last_30_days_for_db]), user)
 
         if vdot_data.empty:
             print("Warning: No race-like efforts found in data")
@@ -51,9 +51,7 @@ def clean_and_build_dataset(file_stream):
         print(traceback.format_exc())
         raise
 
-def write_rundata_to_db(df: pd.DataFrame):
-
-    user = 'cb6541ac-4f5f-48ce-9f59-87260d595a27'
+def write_rundata_to_db(df: pd.DataFrame, user):
 
     SUPABASE_URL = os.getenv('DB_URL')
     SUPABASE_KEY = os.getenv('DB_KEY')
@@ -91,9 +89,7 @@ def write_rundata_to_db(df: pd.DataFrame):
         except Exception as e:
             print(f"❌ Failed to write data to the database. Error: {e}")
 
-def write_recent_activity_to_db(df: pd.DataFrame):
-
-    user = 'cb6541ac-4f5f-48ce-9f59-87260d595a27'
+def write_recent_activity_to_db(df: pd.DataFrame, user):
 
     SUPABASE_URL = os.getenv('DB_URL')
     SUPABASE_KEY = os.getenv('DB_KEY')
@@ -131,3 +127,56 @@ def write_recent_activity_to_db(df: pd.DataFrame):
             print(f"Recent activity successfully written to the database. Count: {count}")
         except Exception as e:
             print(f"Failed to write recent activity to the database. Error: {e}")
+
+def write_current_fitness_metrics_to_db(vdot: float, avg_hr: int, fivek_time: str, half_marathon_time: str, marathon_time: str, user):
+
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    # Delete current user's fitness metrics
+    supabase.table("CurrentFitness").delete().eq("user", user).execute()
+    print("Existing user fitness metrics deleted.")
+
+    data_to_insert = {
+        "vdot": vdot,
+        "avg_hr": avg_hr,
+        "fivek_prediction": fivek_time,
+        "half_prediction": half_marathon_time,
+        "full_prediction": marathon_time,
+        "user": user
+    }
+
+    try:
+        supabase.table("CurrentFitness").insert(data_to_insert).execute()
+        print(f"Current fitness metrics successfully written to the database.")
+    except Exception as e:
+        print(f"Failed to write current fitness metrics to the database. Error: {e}")
+
+
+def check_for_data(user):
+
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    response = supabase.table("CurrentFitness").select("*").eq("user", user).execute()
+    data = response.data
+
+    if data and len(data) > 0:
+        print(f"Data found for user {user}.")
+        response = supabase.table("CurrentFitness").select("*").eq("user", user).execute()
+
+        return_data = {
+            'vdot': response.data[0]['vdot'],
+            'avg_hr': response.data[0]['avg_hr'],
+            'fivek_prediction': response.data[0]['fivek_prediction'],
+            'half_prediction': response.data[0]['half_prediction'],
+            'full_prediction': response.data[0]['full_prediction']
+        }
+        return return_data
+    else:
+        print(f"No data found for user {user}.")
+        return False
