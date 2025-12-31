@@ -79,16 +79,6 @@ def ask_gemini(prompt, user):
     # Combined context for the model
     context_data = f"HISTORICAL RUNS:\n{allRuns}\n\nRECENT SUMMARY:\n{recentActivity}\nJACK DANIELS CURRENT VDOT INDICATOR:\n{vdot}"
 
-    enhanced_prompt = f"""
-        {prompt}
-
-        IMPORTANT FORMATTING INSTRUCTIONS:
-        - Use Markdown formatting (## for headers, ** for bold, * for bullet points)
-        - Do NOT include coaching notes or disclaimers at the end
-        - Keep the response focused on: fitness analysis, paces, and the weekly training schedule
-        - Omit sections like "Important Coaching Notes" or any final advice/disclaimers
-    """
-
     response = client.models.generate_content(
         model="models/gemini-2.5-flash",
         config=types.GenerateContentConfig(
@@ -96,9 +86,7 @@ def ask_gemini(prompt, user):
         ),
         contents=[
             {"role": "user", "parts": [{"text": context_data}]},
-            {"role": "user", "parts": [{"text": enhanced_prompt}]}
+            {"role": "user", "parts": [{"text": prompt}]}
         ],
     )
     return response.text
-
-#print(ask_gemini("Create me a 30 day training plan.", "e6161235-d6b0-4027-8b47-b2d0d549e3f8"))

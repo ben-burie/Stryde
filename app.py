@@ -198,10 +198,17 @@ def training_plan():
             response = load_training_plan(userID)
         else:
             from coachChatbot import ask_gemini
-            print(f"DEBUG: Calling ask_gemini for user {userID}")
-            response = ask_gemini("Create me a 30 day training plan.", userID)
+            enhanced_prompt = f"""
+                {"Create me a 30 day training plan."}
+
+                IMPORTANT FORMATTING INSTRUCTIONS:
+                - Use Markdown formatting (## for headers, ** for bold, * for bullet points)
+                - Do NOT include coaching notes or disclaimers at the end
+                - Keep the response focused on: fitness analysis, paces, and the weekly training schedule
+                - Omit sections like "Important Coaching Notes" or any final advice/disclaimers
+            """
+            response = ask_gemini(enhanced_prompt, userID)
             write_training_plan_to_db(response, userID)
-            print(f"DEBUG: Gemini response received: {type(response)}")
         
         return jsonify({
             'status': 'success',
