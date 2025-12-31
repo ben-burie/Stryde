@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from io import StringIO
 from supabase import create_client, Client
 import os
+from datetime import date
 
 def clean_and_build_dataset(file_stream, user):
     try: 
@@ -154,6 +155,27 @@ def write_current_fitness_metrics_to_db(vdot: float, avg_hr: int, fivek_time: st
     except Exception as e:
         print(f"Failed to write current fitness metrics to the database. Error: {e}")
 
+def write_training_plan_to_db(plan_text: str, user):
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    # Delete current user's training plan
+    supabase.table("TrainingPlan").delete().eq("user", user).execute()
+    print("Existing user training plan deleted.")
+
+    data_to_insert = {
+        "plan": plan_text,
+        "user": user
+    }
+
+    try:
+        supabase.table("TrainingPlan").insert(data_to_insert).execute()
+        print(f"Training plan successfully written to the database.")
+    except Exception as e:
+        print(f"Failed to write training plan to the database. Error: {e}")
+
 
 def check_for_data(user):
 
@@ -180,3 +202,35 @@ def check_for_data(user):
     else:
         print(f"No data found for user {user}.")
         return False
+    
+def check_for_training_plan(user):
+
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    response = supabase.table("TrainingPlan").select("*").eq("user", user).execute()
+    data = response.data
+
+    current_date = date.today()
+
+    if data and len(data) > 0:
+        print(f"Training plan found for user {user}.")
+        return True
+    else:
+        print(f"No training plan found for user {user}.")
+        return False
+    
+def load_training_plan(user):
+
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    response = supabase.table("TrainingPlan").select("plan").eq("user", user).execute()
+    data = response.data
+
+    plan_text = data[0]['plan']
+    return plan_text

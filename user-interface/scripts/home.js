@@ -212,18 +212,105 @@ function sendMessage() {
 }
 
 // Training plan
+// Training plan with loading modal
 function generateTrainingPlan() {
     if (!DATA_UPLOADED) {
         alert('Please upload your data first to generate a training plan.');
         return;
     }
+
     const trainingPlanBox = document.getElementById('trainingPlanBox');
     const generatePlanBtn = document.getElementById('generatePlanBtn');
     const predictedFitnessSection = document.getElementById('predictedFitnessSection');
-    
+
+    // Show the training plan box and hide the button
     trainingPlanBox.classList.remove('hidden');
     predictedFitnessSection.style.display = 'block';
     generatePlanBtn.style.display = 'none';
+
+    // Show loading state in the training plan box
+    trainingPlanBox.innerHTML = `
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <h3>Generating Your Training Plan</h3>
+            <p>This may take a minute as we analyze your data...</p>
+        </div>
+    `;
+
+    const token = localStorage.getItem('authToken');
+
+    fetch(`${API_BASE_URL}/api/training-plan`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Training Plan Response:', data);
+        
+        if (data.status === 'success') {
+            const trainingPlan = data.response;
+            console.log('Training Plan:', trainingPlan);
+            displayTrainingPlan(trainingPlan, trainingPlanBox);
+        } else {
+            trainingPlanBox.innerHTML = '<p class="error">Failed to generate training plan. Please try again.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Error generating training plan:', error);
+        trainingPlanBox.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+    })
+    .finally(() => {
+        generatePlanBtn.style.display = 'block';
+    });
+}
+
+function displayTrainingPlan(plan, container) {
+
+    const htmlPlan = markdownToHtml(plan);
+    
+    container.innerHTML = `
+        <div class="training-plan-content">
+            <h3>Your 30-Day Training Plan</h3>
+            <div class="plan-text">
+                ${htmlPlan}
+            </div>
+        </div>
+    `;
+}
+
+function markdownToHtml(markdown) {
+    let html = markdown;
+    
+    // Headers (## and ###)
+    html = html.replace(/^### (.*?)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^## (.*?)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^# (.*?)$/gm, '<h2>$1</h2>');
+    
+    // Bold (**text**)
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Italic (*text*)
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    // Line breaks
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = '<p>' + html + '</p>';
+    
+    // List items (* or -)
+    html = html.replace(/^\* (.*?)$/gm, '<li>$1</li>');
+    html = html.replace(/^\- (.*?)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*?<\/li>)/s, '<ul>$1</ul>');
+    
+    return html;
 }
 
 // Tab switching

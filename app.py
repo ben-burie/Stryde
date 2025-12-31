@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 # Helper scripts
-from dataPrep import clean_and_build_dataset, check_for_data, write_current_fitness_metrics_to_db
+from dataPrep import clean_and_build_dataset, check_for_data, write_current_fitness_metrics_to_db, write_training_plan_to_db, check_for_training_plan, load_training_plan
 from getPredictions import get_times, seconds_to_time
 import loginHandler
 
@@ -171,6 +171,47 @@ def get_user_data():
 
     except Exception as e:
         print(f"Error retrieving user data: {str(e)}")
+        return jsonify({'message': str(e)}), 500
+    
+@app.route('/api/training-plan', methods=['POST'])
+def training_plan():
+    try:
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        print(f"DEBUG: Token received: {token[:20] if token else 'NO TOKEN'}...")
+        
+        if not token:
+            print("DEBUG: No token provided")
+            return jsonify({'message': 'No token provided'}), 401
+        
+        try:
+            user = loginHandler.verify_token(token)
+            print(f"DEBUG: User verified - ID: {user.id}")
+        except Exception as token_error:
+            print(f"DEBUG: Token verification failed: {str(token_error)}")
+            return jsonify({'message': f'Token invalid: {str(token_error)}'}), 401
+        
+        userID = user.id
+
+        plan_found = check_for_training_plan(userID)
+
+        if plan_found:
+            response = load_training_plan(userID)
+        else:
+            from coachChatbot import ask_gemini
+            print(f"DEBUG: Calling ask_gemini for user {userID}")
+            response = ask_gemini("Create me a 30 day training plan.", userID)
+            write_training_plan_to_db(response, userID)
+            print(f"DEBUG: Gemini response received: {type(response)}")
+        
+        return jsonify({
+            'status': 'success',
+            'response': response
+        }), 200
+        
+    except Exception as e:
+        print(f"ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'message': str(e)}), 500
 
 @app.route('/api/health', methods=['GET'])

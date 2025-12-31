@@ -10,9 +10,7 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv('API-KEY'))
 
-def load_runs():
-    user = 'cb6541ac-4f5f-48ce-9f59-87260d595a27'
-
+def load_runs(user):
     SUPABASE_URL = os.getenv('DB_URL')
     SUPABASE_KEY = os.getenv('DB_KEY')
 
@@ -31,9 +29,7 @@ def load_runs():
 
     return run_records_text
 
-def load_recent_activity_summary():
-    user = 'cb6541ac-4f5f-48ce-9f59-87260d595a27'
-
+def load_recent_activity_summary(user):
     SUPABASE_URL = os.getenv('DB_URL')
     SUPABASE_KEY = os.getenv('DB_KEY')
 
@@ -52,12 +48,46 @@ def load_recent_activity_summary():
 
     return recent_activity_text
 
-def ask_gemini(prompt):
-    allRuns = load_runs()
-    recentActivity = load_recent_activity_summary()
+def load_vdot(user):
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    response = (
+        supabase.table("CurrentFitness")
+        .select("vdot")
+        .eq("user", user).execute()
+    )
+
+    data = response.data
+
+    if not data:
+        return "No current fitness metrics found."
+
+    metrics = data[0]
+    vdot_text = (
+        f"VDOT: {metrics['vdot']}\n"
+    )
+
+    return vdot_text
+
+def ask_gemini(prompt, user):
+    allRuns = load_runs(user)
+    recentActivity = load_recent_activity_summary(user)
+    vdot = load_vdot(user)
     
     # Combined context for the model
-    context_data = f"HISTORICAL RUNS:\n{allRuns}\n\nRECENT SUMMARY:\n{recentActivity}"
+    context_data = f"HISTORICAL RUNS:\n{allRuns}\n\nRECENT SUMMARY:\n{recentActivity}\nJACK DANIELS CURRENT VDOT INDICATOR:\n{vdot}"
+
+    enhanced_prompt = f"""
+        {prompt}
+
+        IMPORTANT FORMATTING INSTRUCTIONS:
+        - Use Markdown formatting (## for headers, ** for bold, * for bullet points)
+        - Do NOT include coaching notes or disclaimers at the end
+        - Keep the response focused on: fitness analysis, paces, and the weekly training schedule
+        - Omit sections like "Important Coaching Notes" or any final advice/disclaimers
+    """
 
     response = client.models.generate_content(
         model="models/gemini-2.5-flash",
@@ -66,9 +96,9 @@ def ask_gemini(prompt):
         ),
         contents=[
             {"role": "user", "parts": [{"text": context_data}]},
-            {"role": "user", "parts": [{"text": prompt}]}
+            {"role": "user", "parts": [{"text": enhanced_prompt}]}
         ],
     )
     return response.text
 
-print(ask_gemini("Create me a 30 day training plan."))
+#print(ask_gemini("Create me a 30 day training plan.", "e6161235-d6b0-4027-8b47-b2d0d549e3f8"))
