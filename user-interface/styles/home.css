@@ -695,3 +695,68 @@ body {
     border-radius: 4px;
     border-left: 4px solid #e74c3c;
 }
+.plan-text ul {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.plan-text ul ul {
+    margin: 5px 0;
+    padding-left: 30px;
+    list-style-type: circle; /* Use circle bullets for nested lists */
+}
+
+.plan-text ul ul ul {
+    padding-left: 30px;
+    list-style-type: square; /* Use square bullets for deeply nested */
+}
+
+.plan-text li {
+    margin: 6px 0;
+    line-height: 1.7;
+    color: #555;
+}
+
+.plan-text strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.plan-text em {
+    font-style: italic;
+    color: #666;
+}
+
+.plan-text h2,
+.plan-text h3,
+.plan-text h4 {
+    margin: 20px 0 10px 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.plan-text h2 {
+    font-size: 24px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.plan-text h3 {
+    font-size: 20px;
+    margin-top: 18px;
+}
+
+.plan-text h4 {
+    font-size: 16px;
+}
+
+.plan-text p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.plan-text hr {
+    border: none;
+    border-top: 2px solid #ddd;
+    margin: 20px 0;
+}

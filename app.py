@@ -204,6 +204,7 @@ def training_plan():
                 IMPORTANT FORMATTING INSTRUCTIONS:
                 - Use Markdown formatting (## for headers, ** for bold, * for bullet points)
                 - Do NOT include coaching notes or disclaimers at the end
+                - Do NOT include and "Run ID's" anywhere in your output
                 - Keep the response focused on: fitness analysis, paces, and the weekly training schedule
                 - Omit sections like "Important Coaching Notes" or any final advice/disclaimers
             """
