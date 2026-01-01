@@ -189,30 +189,8 @@ function showError(message) {
     loadingState.classList.remove('show');
 }
 
-// Chat functionality
-function handleKeyPress(event) {
-    if (event.key === 'Enter') {
-        sendMessage();
-    }
-}
-
-function sendMessage() {
-    const input = document.getElementById('messageInput');
-    const message = input.value.trim();
-    if (message) {
-        const chatMessages = document.getElementById('chatMessages');
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message user';
-        userMsg.textContent = message;
-        chatMessages.appendChild(userMsg);
-        input.value = '';
-        input.focus();
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-}
-
-// Training plan
-// Training plan with loading modal
+//------------------------------------------------------------------------------
+//Training plan generation
 function generateTrainingPlan() {
     if (!DATA_UPLOADED) {
         alert('Please upload your data first to generate a training plan.');

@@ -59,8 +59,9 @@ def write_rundata_to_db(df: pd.DataFrame, user):
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-    # Delete current user's data
+    # Delete current user's data and training plan (if exists)
     supabase.table("RunData").delete().eq("user", user).execute()
+    supabase.table("TrainingPlan").delete().eq("user", user).execute()
     print("Existing user data deleted.")
 
     data = df.to_dict(orient='records')

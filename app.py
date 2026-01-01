@@ -221,6 +221,46 @@ def training_plan():
         import traceback
         traceback.print_exc()
         return jsonify({'message': str(e)}), 500
+    
+@app.route('/api/chat-response', methods=['POST'])
+def chat_response():
+    try:
+        data = request.json
+        message = data.get('message', '')
+
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        if not token:
+            return jsonify({'message': 'No token provided'}), 401
+
+        user = loginHandler.verify_token(token)
+
+        if not user:
+            return jsonify({'message': 'Invalid token'}), 401
+
+        from coachChatbot import ask_gemini
+
+        optimized_message = f"""
+            {message}
+
+            IMPORTANT RESPONSE INSTRUCTIONS:
+            - Limit your response to no more than 100 words
+            - Focus on providing concise, actionable advice
+            - Avoid lengthy explanations or background information
+            - Prioritize clarity and brevity in your coaching tips
+            - Do NOT include any * characters in your response
+            - Do NOT include any sec/mile metrics, just include min/mile
+        """
+
+        response_text = ask_gemini(optimized_message, user.id)
+
+        return jsonify({
+            'status': 'success',
+            'response': response_text
+        }), 200
+
+    except Exception as e:
+        print(f"Error generating chat response: {str(e)}")
+        return jsonify({'message': str(e)}), 500
 
 @app.route('/api/health', methods=['GET'])
 def health():
