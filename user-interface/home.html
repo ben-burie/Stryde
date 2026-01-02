@@ -100,12 +100,21 @@
                     </div>
                     <div class="stat-value">VDOT</div>
                 </div>
-                
-                <!-- Predicted Heart Rate Card -->
-                <div class="stat-card heart-card">
-                    <div class="heart-icon">♥</div>
-                    <div class="hr-value" id="predicted-hr-value">-- BPM</div>
-                    <div class="stat-label">AVG Heart Rate</div>
+
+                <!-- Percentage Increase Card -->
+                <div class="stat-card percentage-card">
+                    <div class="percentage-icon">
+                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Background circle -->
+                            <circle cx="40" cy="40" r="38" fill="#f0f4f8" stroke="#0066cc" stroke-width="2"/>
+                            <!-- Arrow pointing up -->
+                            <path d="M40 55 L40 20" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Arrow head -->
+                            <path d="M35 30 L40 20 L45 30" stroke="#0066cc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="percentage-value" id="percentage-increase-value">--</div>
+                    <div class="stat-label">Estimated Fitness Increase</div>
                 </div>
                 
                 <!-- Predicted Race Predictions Card -->

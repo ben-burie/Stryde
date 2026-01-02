@@ -236,7 +236,12 @@ function generateTrainingPlan() {
         
         if (data.status === 'success') {
             const trainingPlan = data.response;
-            console.log('Training Plan:', trainingPlan);
+            const predictedVdot = data.predicted_vdot;
+            document.getElementById('predicted-vdot-value').textContent = parseFloat(predictedVdot).toFixed(2);
+            document.querySelector('.predicted-fivek-prediction-time').textContent = data.fivek_time;
+            document.querySelector('.predicted-half-prediction-time').textContent = data.half_time;
+            document.querySelector('.predicted-full-prediction-time').textContent = data.full_time;
+            document.getElementById('percentage-increase-value').textContent = data.pct_increase + '%';
             displayTrainingPlan(trainingPlan, trainingPlanBox);
         } else {
             trainingPlanBox.innerHTML = '<p class="error">Failed to generate training plan. Please try again.</p>';

@@ -794,3 +794,25 @@ body {
         transform: translateY(-10px);
     }
 }
+
+/* Percentage Increase Card Styling */
+.percentage-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.percentage-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+.percentage-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0066cc;
+    text-align: center;
+}

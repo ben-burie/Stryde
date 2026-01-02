@@ -5,6 +5,8 @@ from flask_cors import CORS
 from dataPrep import clean_and_build_dataset, check_for_data, write_current_fitness_metrics_to_db, write_training_plan_to_db, check_for_training_plan, load_training_plan
 from getPredictions import get_times, seconds_to_time
 import loginHandler
+from vdotPredictionUse import get_prediction
+import planParser
 
 app = Flask(__name__)
 CORS(app)
@@ -210,10 +212,20 @@ def training_plan():
             """
             response = ask_gemini(enhanced_prompt, userID)
             write_training_plan_to_db(response, userID)
+
+        parsed_plan = planParser.main(response)
+        predicted_vdot, pct_increase = get_prediction(userID, parsed_plan)
+
+        times = get_times(predicted_vdot)
         
         return jsonify({
             'status': 'success',
-            'response': response
+            'response': response,
+            'predicted_vdot': predicted_vdot,
+            'fivek_time': seconds_to_time(times['5000']),
+            'half_time': seconds_to_time(times['1/2 Marathon']),
+            'full_time': seconds_to_time(times['Marathon']),
+            'pct_increase': pct_increase
         }), 200
         
     except Exception as e:

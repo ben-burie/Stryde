@@ -4,8 +4,6 @@ matplotlib.use('Agg')
 from vdot_ml_model.cleanInput import clean_strava_csv
 from vdot_ml_model.buildRollingFeatures import build_rolling_features
 from vdot_ml_model.labelVdot import label_rolling_features
-from vdot_ml_model.variableVdotPredictor import predict_vdot
-from vdot_ml_model.variableVdotPredictor_v2 import predict_vdot_v2
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -87,9 +85,9 @@ def write_rundata_to_db(df: pd.DataFrame, user):
         try:
             supabase.table("RunData").insert(data_to_insert).execute()
             count += 1
-            print(f"✅ Data successfully written to the database. Count: {count}")
+            print(f"Data successfully written to the database. Count: {count}")
         except Exception as e:
-            print(f"❌ Failed to write data to the database. Error: {e}")
+            print(f"Failed to write data to the database. Error: {e}")
 
 def write_recent_activity_to_db(df: pd.DataFrame, user):
 

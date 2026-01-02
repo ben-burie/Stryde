@@ -80,7 +80,7 @@ def ask_gemini(prompt, user):
     context_data = f"HISTORICAL RUNS:\n{allRuns}\n\nRECENT SUMMARY:\n{recentActivity}\nJACK DANIELS CURRENT VDOT INDICATOR:\n{vdot}"
 
     response = client.models.generate_content(
-        model="models/gemini-2.5-flash-lite",
+        model="models/gemini-2.5-flash",
         config=types.GenerateContentConfig(
             system_instruction="You are an expert running coach."
         ),
