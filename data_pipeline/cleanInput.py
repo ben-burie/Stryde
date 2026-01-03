@@ -41,7 +41,7 @@ def clean_strava_csv(input_csv_path: str) -> None:
     df["distance_km"] = df["distance"].copy()
     df["distance_miles"] = df["distance_km"] * 0.621371
 
-    df.to_csv("vdot_ml_model/clean_activities.csv", index=False)
+    #df.to_csv("vdot_ml_model/clean_activities.csv", index=False)
     #print(f"✅ Cleaned Strava CSV saved to: {output_csv_path}")
 
     print("Input cleaned.")

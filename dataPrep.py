@@ -1,9 +1,6 @@
-import matplotlib
-matplotlib.use('Agg')
-
-from vdot_ml_model.cleanInput import clean_strava_csv
-from vdot_ml_model.buildRollingFeatures import build_rolling_features
-from vdot_ml_model.labelVdot import label_rolling_features
+from data_pipeline.cleanInput import clean_strava_csv
+from data_pipeline.buildRollingFeatures import build_rolling_features
+from data_pipeline.labelVdot import label_rolling_features
 
 import pandas as pd
 import matplotlib.pyplot as plt

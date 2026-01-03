@@ -4,7 +4,7 @@ import pandas as pd
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
-from vdot_ml_model.buildRollingFeatures import build_rolling_features
+from data_pipeline.buildRollingFeatures import build_rolling_features
 
 
 load_dotenv()
