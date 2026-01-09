@@ -6,11 +6,18 @@ from supabase import create_client, Client
 from dotenv import load_dotenv
 from data_pipeline.buildRollingFeatures import build_rolling_features
 
-
 load_dotenv()
 
-def get_prediction(user, parsed_plan):
-    rolling_features_df = load_rolling_features(user)
+def get_authed_client(user_access_token: str) -> Client:
+    """Create a client with user authentication for RLS"""
+    SUPABASE_URL = os.getenv('DB_URL')
+    SUPABASE_KEY = os.getenv('DB_KEY')
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase.postgrest.auth(user_access_token)
+    return supabase
+
+def get_prediction(user, parsed_plan, user_access_token):
+    rolling_features_df = load_rolling_features(user, user_access_token=user_access_token)
     training_plan_df = parsed_plan
 
     predictor = VDOTPredictor()
@@ -27,11 +34,10 @@ def get_prediction(user, parsed_plan):
     final_pct_increase = round(pct_increase, 2)
     return final_vdot_predicted, final_pct_increase
 
-def load_rolling_features(user):
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
+def load_rolling_features(user, user_access_token):
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
+
     response = (
         supabase.table("RunData")
         .select("*")

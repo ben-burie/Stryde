@@ -10,11 +10,17 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv('API-KEY'))
 
-def load_runs(user):
+def get_authed_client(user_access_token: str) -> Client:
+    """Create a client with user authentication for RLS"""
     SUPABASE_URL = os.getenv('DB_URL')
     SUPABASE_KEY = os.getenv('DB_KEY')
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase.postgrest.auth(user_access_token)
+    return supabase
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+def load_runs(user, user_access_token):
+
+    supabase = get_authed_client(user_access_token)
     response = (
         supabase.table("RunData")
         .select("id, distance_miles, moving_time, average_heartrate, total_elevation_gain, start_date")
@@ -29,11 +35,9 @@ def load_runs(user):
 
     return run_records_text
 
-def load_recent_activity_summary(user):
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
+def load_recent_activity_summary(user, user_access_token):
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
     response = (
         supabase.table("RecentActivity")
         .select("id, start_date, mileage_miles_30d, run_count_30d, avg_hr_30d, longest_run_miles_30d, avg_pace_sec_per_mile_30d, elevation_gain_m_30d")
@@ -48,11 +52,9 @@ def load_recent_activity_summary(user):
 
     return recent_activity_text
 
-def load_vdot(user):
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
+def load_vdot(user, user_access_token):
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
     response = (
         supabase.table("CurrentFitness")
         .select("vdot")
@@ -71,10 +73,10 @@ def load_vdot(user):
 
     return vdot_text
 
-def ask_gemini(prompt, user):
-    allRuns = load_runs(user)
-    recentActivity = load_recent_activity_summary(user)
-    vdot = load_vdot(user)
+def ask_gemini(prompt, user, user_access_token):
+    allRuns = load_runs(user, user_access_token)
+    recentActivity = load_recent_activity_summary(user, user_access_token)
+    vdot = load_vdot(user, user_access_token)
     
     # Combined context for the model
     context_data = f"HISTORICAL RUNS:\n{allRuns}\n\nRECENT SUMMARY:\n{recentActivity}\nJACK DANIELS CURRENT VDOT INDICATOR:\n{vdot}"

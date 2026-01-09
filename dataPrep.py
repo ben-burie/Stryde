@@ -9,13 +9,23 @@ from supabase import create_client, Client
 import os
 from datetime import date
 
-def clean_and_build_dataset(file_stream, user):
+SUPABASE_URL = os.getenv('DB_URL')
+SUPABASE_KEY = os.getenv('DB_KEY')
+
+def get_authed_client(user_access_token: str) -> Client:
+    """Create a client with user authentication for RLS"""
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    # Set the auth header directly for RLS to work
+    supabase.postgrest.auth(user_access_token)
+    return supabase
+
+def clean_and_build_dataset(file_stream, user, user_access_token):
     try: 
         csv_string = file_stream.read().decode('utf-8')
         csv_io = StringIO(csv_string)
 
         clean_data = clean_strava_csv(input_csv_path=csv_io)
-        write_rundata_to_db(clean_data, user)
+        write_rundata_to_db(clean_data, user, user_access_token)
         clean_data["start_date"] = pd.to_datetime(clean_data["start_date"])
 
         rolling_features_data = build_rolling_features(df=clean_data)
@@ -25,7 +35,7 @@ def clean_and_build_dataset(file_stream, user):
 
         last_30_days_for_db = last_30_days.copy()
         last_30_days_for_db["start_date"] = pd.Timestamp(last_30_days_for_db["start_date"]).strftime('%Y-%m-%d %H:%M:%S')
-        write_recent_activity_to_db(pd.DataFrame([last_30_days_for_db]), user)
+        write_recent_activity_to_db(pd.DataFrame([last_30_days_for_db]), user, user_access_token)
 
         if vdot_data.empty:
             print("Warning: No race-like efforts found in data")
@@ -47,12 +57,9 @@ def clean_and_build_dataset(file_stream, user):
         print(traceback.format_exc())
         raise
 
-def write_rundata_to_db(df: pd.DataFrame, user):
+def write_rundata_to_db(df: pd.DataFrame, user, user_access_token):
 
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
-
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     # Delete current user's data and training plan (if exists)
     supabase.table("RunData").delete().eq("user", user).execute()
@@ -86,12 +93,9 @@ def write_rundata_to_db(df: pd.DataFrame, user):
         except Exception as e:
             print(f"Failed to write data to the database. Error: {e}")
 
-def write_recent_activity_to_db(df: pd.DataFrame, user):
+def write_recent_activity_to_db(df: pd.DataFrame, user, user_access_token):
 
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
-
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     supabase.table("RecentActivity").delete().eq("user", user).execute()
     print("Existing user data deleted.")
@@ -125,12 +129,9 @@ def write_recent_activity_to_db(df: pd.DataFrame, user):
         except Exception as e:
             print(f"Failed to write recent activity to the database. Error: {e}")
 
-def write_current_fitness_metrics_to_db(vdot: float, avg_hr: int, fivek_time: str, half_marathon_time: str, marathon_time: str, user):
+def write_current_fitness_metrics_to_db(vdot: float, avg_hr: int, fivek_time: str, half_marathon_time: str, marathon_time: str, user, user_access_token):
 
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
-
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     # Delete current user's fitness metrics
     supabase.table("CurrentFitness").delete().eq("user", user).execute()
@@ -151,11 +152,9 @@ def write_current_fitness_metrics_to_db(vdot: float, avg_hr: int, fivek_time: st
     except Exception as e:
         print(f"Failed to write current fitness metrics to the database. Error: {e}")
 
-def write_training_plan_to_db(plan_text: str, user):
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
+def write_training_plan_to_db(plan_text: str, user, user_access_token):
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     # Delete current user's training plan
     supabase.table("TrainingPlan").delete().eq("user", user).execute()
@@ -173,12 +172,9 @@ def write_training_plan_to_db(plan_text: str, user):
         print(f"Failed to write training plan to the database. Error: {e}")
 
 
-def check_for_data(user):
+def check_for_data(user, user_access_token):
 
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
-
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     response = supabase.table("CurrentFitness").select("*").eq("user", user).execute()
     data = response.data
@@ -199,12 +195,9 @@ def check_for_data(user):
         print(f"No data found for user {user}.")
         return False
     
-def check_for_training_plan(user):
+def check_for_training_plan(user, user_access_token):
 
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
-
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     response = supabase.table("TrainingPlan").select("*").eq("user", user).execute()
     data = response.data
@@ -218,12 +211,9 @@ def check_for_training_plan(user):
         print(f"No training plan found for user {user}.")
         return False
     
-def load_training_plan(user):
+def load_training_plan(user, user_access_token):
 
-    SUPABASE_URL = os.getenv('DB_URL')
-    SUPABASE_KEY = os.getenv('DB_KEY')
-
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = get_authed_client(user_access_token)
 
     response = supabase.table("TrainingPlan").select("plan").eq("user", user).execute()
     data = response.data

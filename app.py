@@ -42,7 +42,7 @@ def login():
 
         print(f"Login successful for {email}")
 
-        dataResult = check_for_data(result.user.id)
+        dataResult = check_for_data(result.user.id, user_access_token=result.session.access_token)
 
         return jsonify({
             'status': 'success',
@@ -113,13 +113,13 @@ def upload_data():
         userId = user.id
         print(f"User ID from token: {userId}")
         
-        result = clean_and_build_dataset(file_stream=file, user=userId)
+        result = clean_and_build_dataset(file_stream=file, user=userId, user_access_token=token)
         vdot = result[0]
         avg_hr = result[1]
 
         times = get_times(vdot)
 
-        write_current_fitness_metrics_to_db(vdot, avg_hr, times['5000'], times['1/2 Marathon'], times['Marathon'], userId)
+        write_current_fitness_metrics_to_db(vdot, avg_hr, times['5000'], times['1/2 Marathon'], times['Marathon'], userId, user_access_token=token)
 
         return {
             'vdot': vdot,
@@ -148,7 +148,7 @@ def get_user_data():
         if not user:
             return jsonify({'message': 'Invalid token'}), 401
 
-        dataResult = check_for_data(user.id)
+        dataResult = check_for_data(user.id, user_access_token=token)
 
         if dataResult is False:
             return jsonify({'message': 'No data found for user'}), 404
@@ -194,10 +194,10 @@ def training_plan():
         
         userID = user.id
 
-        plan_found = check_for_training_plan(userID)
+        plan_found = check_for_training_plan(userID, user_access_token=token)
 
         if plan_found:
-            response = load_training_plan(userID)
+            response = load_training_plan(userID, user_access_token=token)
         else:
             from coachChatbot import ask_gemini
             enhanced_prompt = f"""
@@ -210,11 +210,11 @@ def training_plan():
                 - Keep the response focused on: fitness analysis, paces, and the weekly training schedule
                 - Omit sections like "Important Coaching Notes" or any final advice/disclaimers
             """
-            response = ask_gemini(enhanced_prompt, userID)
-            write_training_plan_to_db(response, userID)
+            response = ask_gemini(enhanced_prompt, userID, user_access_token=token)
+            write_training_plan_to_db(response, userID, user_access_token=token)
 
         parsed_plan = planParser.main(response)
-        predicted_vdot, pct_increase = get_prediction(userID, parsed_plan)
+        predicted_vdot, pct_increase = get_prediction(userID, parsed_plan, user_access_token=token)
 
         times = get_times(predicted_vdot)
         
@@ -263,7 +263,7 @@ def chat_response():
             - Do NOT include any sec/mile metrics, just include min/mile
         """
 
-        response_text = ask_gemini(optimized_message, user.id)
+        response_text = ask_gemini(optimized_message, user.id, user_access_token=token)
 
         return jsonify({
             'status': 'success',
