@@ -9,7 +9,6 @@ from data_pipeline.buildRollingFeatures import build_rolling_features
 load_dotenv()
 
 def get_authed_client(user_access_token: str) -> Client:
-    """Create a client with user authentication for RLS"""
     SUPABASE_URL = os.getenv('DB_URL')
     SUPABASE_KEY = os.getenv('DB_KEY')
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)

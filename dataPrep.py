@@ -13,9 +13,7 @@ SUPABASE_URL = os.getenv('DB_URL')
 SUPABASE_KEY = os.getenv('DB_KEY')
 
 def get_authed_client(user_access_token: str) -> Client:
-    """Create a client with user authentication for RLS"""
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-    # Set the auth header directly for RLS to work
     supabase.postgrest.auth(user_access_token)
     return supabase
 
