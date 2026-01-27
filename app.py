@@ -3,10 +3,10 @@ from flask_cors import CORS
 
 # Helper scripts
 from dataPrep import clean_and_build_dataset, check_for_data, write_current_fitness_metrics_to_db, write_training_plan_to_db, check_for_training_plan, load_training_plan
-from getPredictions import get_times, seconds_to_time
-import loginHandler
-from vdotPredictionUse import get_prediction
-import planParser
+from scripts.getPredictions import get_times, seconds_to_time
+import scripts.loginHandler as loginHandler
+from scripts.vdotPredictionUse import get_prediction
+import scripts.planParser as planParser
 
 app = Flask(__name__)
 CORS(app)
@@ -199,7 +199,7 @@ def training_plan():
         if plan_found:
             response = load_training_plan(userID, user_access_token=token)
         else:
-            from coachChatbot import ask_gemini
+            from scripts.coachChatbot import ask_gemini
             enhanced_prompt = f"""
                 {"Create me a 30 day training plan."}
 
@@ -249,7 +249,7 @@ def chat_response():
         if not user:
             return jsonify({'message': 'Invalid token'}), 401
 
-        from coachChatbot import ask_gemini
+        from scripts.coachChatbot import ask_gemini
 
         optimized_message = f"""
             {message}

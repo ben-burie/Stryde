@@ -1,5 +1,5 @@
-from vdotPredictor import VDOTPredictor
-from planParser import main as parse_plan
+from scripts.vdotPredictor import VDOTPredictor
+from scripts.planParser import main as parse_plan
 import pandas as pd
 import os
 from supabase import create_client, Client
