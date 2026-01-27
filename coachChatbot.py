@@ -114,8 +114,8 @@ def ask_gemini(prompt, user, user_access_token):
         output_tokens = usage_metadata.candidates_token_count
         total_tokens = usage_metadata.total_token_count
         
-        input_cost = (input_tokens / 1_000_000) * 0.075
-        output_cost = (output_tokens / 1_000_000) * 2.5
+        input_cost = (input_tokens / 1_000_000) * 0.30
+        output_cost = (output_tokens / 1_000_000) * 2.50
         total_cost = input_cost + output_cost
         
         log_entry = {
